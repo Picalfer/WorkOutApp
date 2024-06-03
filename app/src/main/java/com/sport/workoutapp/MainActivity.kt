@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.sport.workoutapp.ui.composable.ExercisesScreen
+import com.sport.workoutapp.ui.composable.MainScreen
 import com.sport.workoutapp.ui.theme.WorkOutAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WorkOutAppTheme {
-                ExercisesScreen()
+                MainScreen()
             }
         }
     }

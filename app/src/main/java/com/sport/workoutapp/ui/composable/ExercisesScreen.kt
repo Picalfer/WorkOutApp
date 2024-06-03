@@ -20,20 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sport.workoutapp.data.model.Exercise
 
-@Preview
 @Composable
-fun ExercisesScreen() {
-    val exercises = listOf(
-        Exercise("Разминка 5-10 мин"),
-        Exercise("Выпады с гантелями"),
-        Exercise("Сгибания рук с гантелями сидя/стоя"),
-        Exercise("Становая тяга с гантелями"),
-        Exercise("Сгибания рук с гантелями «молот»"),
-        Exercise("Подъём таза лёжа одной ногой"),
-        Exercise("Сгибание руки сидя через колено"),
-        Exercise("Подъём на носки стоя"),
-        Exercise("Заминка 2-5 мин"),
-    )
+fun ExercisesScreen(exercises: List<Exercise>) {
 
     LazyColumn(
         modifier = Modifier
