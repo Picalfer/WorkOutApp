@@ -1,4 +1,4 @@
-package com.sport.workoutapp.ui.composable
+package com.sport.workoutapp.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,15 @@ fun ExercisesScreen(dayNumber: Int) {
             .padding(24.dp)
     ) {
         Text(
-            text = "Упражнения", fontSize = 20.sp, modifier = Modifier
+            text = "День: ${days[dayNumber].title}", fontSize = 20.sp, modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Упражнения", fontSize = 18.sp, modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
