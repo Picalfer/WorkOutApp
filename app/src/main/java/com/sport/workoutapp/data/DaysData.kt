@@ -8,7 +8,7 @@ import com.sport.workoutapp.ui.theme.Day3Color
 
 fun getDaysData() = days
 
-public val days: List<Day> = listOf(
+private val days: List<Day> = listOf(
     Day(
         title = "Плечи + трицепс + пресс",
         color = Day1Color,

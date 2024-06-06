@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,20 +24,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sport.workoutapp.data.days
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
 
 @Composable
-fun ExercisesScreen(dayNumber: Int) {
+fun ExercisesScreen(
+    exercisesViewModel: ExercisesViewModel = viewModel(),
+    dayNumber: Int
+) {
+
+    val exercisesUiState by exercisesViewModel.uiState.collectAsState()
+
+    exercisesViewModel.updateExercises(dayNumber)
 
     Column(
         modifier = Modifier
             .padding(24.dp)
     ) {
         Text(
-            text = "День: ${days[dayNumber].title}", fontSize = 20.sp, modifier = Modifier
+            text = "День: ${exercisesUiState.dayTitle}", fontSize = 20.sp, modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
@@ -56,11 +64,11 @@ fun ExercisesScreen(dayNumber: Int) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            items(days[dayNumber].exercises.size) { value ->
+            items(exercisesUiState.exercises.size) { value ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(if (value == 0) WarmUpColor else if (value == days[dayNumber].exercises.size - 1) WarmDownColor else ExerciseColor)
+                        .background(if (value == 0) WarmUpColor else if (value == exercisesUiState.exercises.size - 1) WarmDownColor else ExerciseColor)
                         .padding(all = 6.dp)
                 ) {
                     Row(
@@ -69,7 +77,7 @@ fun ExercisesScreen(dayNumber: Int) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = days[dayNumber].exercises[value].title, modifier = Modifier
+                            text = exercisesUiState.exercises[value].title, modifier = Modifier
                                 .padding(10.dp)
                                 .weight(1f)
                         )
