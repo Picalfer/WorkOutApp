@@ -25,13 +25,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable<DaysRoute> {
                         DaysScreen {
-                            navController.navigate(ExercisesRoute(exercises = it))
+                            navController.navigate(ExercisesRoute(dayNumber = it))
                         }
                     }
                     composable<ExercisesRoute> {
                         val args = it.toRoute<ExercisesRoute>()
                         ExercisesScreen(
-                            exercises = args.exercises
+                            dayNumber = args.dayNumber
                         )
                     }
                 }
@@ -45,5 +45,5 @@ object DaysRoute
 
 @Serializable
 data class ExercisesRoute(
-    val exercises: List<String>
+    val dayNumber: Int
 )

@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)

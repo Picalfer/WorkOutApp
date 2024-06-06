@@ -23,12 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sport.workoutapp.data.days
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
 
 @Composable
-fun ExercisesScreen(exercises: List<String>) {
+fun ExercisesScreen(dayNumber: Int) {
 
     Column(
         modifier = Modifier
@@ -47,11 +48,11 @@ fun ExercisesScreen(exercises: List<String>) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            items(exercises.size) { value ->
+            items(days[dayNumber].exercises.size) { value ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(if (value == 0) WarmUpColor else if (value == exercises.size - 1) WarmDownColor else ExerciseColor)
+                        .background(if (value == 0) WarmUpColor else if (value == days[dayNumber].exercises.size - 1) WarmDownColor else ExerciseColor)
                         .padding(all = 6.dp)
                 ) {
                     Row(
@@ -60,7 +61,7 @@ fun ExercisesScreen(exercises: List<String>) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = exercises[value], modifier = Modifier
+                            text = days[dayNumber].exercises[value].title, modifier = Modifier
                                 .padding(10.dp)
                                 .weight(1f)
                         )
