@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +49,8 @@ fun ExercisesScreen(
         Text(
             text = "День: ${exercisesUiState.dayTitle}", fontSize = 20.sp, modifier = Modifier
                 .fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -56,7 +58,8 @@ fun ExercisesScreen(
         Text(
             text = "Упражнения", fontSize = 18.sp, modifier = Modifier
                 .fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
 
         Spacer(modifier = Modifier.height(12.dp))
