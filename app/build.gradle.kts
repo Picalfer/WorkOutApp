@@ -76,6 +76,9 @@ dependencies {
     kapt(libs.dagger.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 }
