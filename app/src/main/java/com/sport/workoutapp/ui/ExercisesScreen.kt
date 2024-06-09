@@ -153,6 +153,8 @@ fun ExerciseItem(
                             }).build(), imageLoader = imageLoader
                     ),
                     contentDescription = null,
+                    modifier = Modifier
+                        .weight(0.5f)
                 )
                 Column {
                     Text(text = " • ${currentExercise.sets} подходов", fontSize = 16.sp)
