@@ -15,6 +15,14 @@
       </SelectionState>
       <SelectionState runConfigName="Work Out App.Work_Out_App.app">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-06-12T11:46:52.015791800Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=TSUOAAYPDU4PYXTC" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>
