@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.1"
+agp = "8.4.2"
 coilCompose = "2.5.0"
 coilGif = "2.1.0"
 dagger = "2.51.1"

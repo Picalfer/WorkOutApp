@@ -1,8 +1,12 @@
 package com.sport.workoutapp.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sport.workoutapp.data.getDaysData
 import com.sport.workoutapp.data.model.Exercise
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,6 +17,7 @@ class ExercisesViewModel : ViewModel() {
     val uiState: StateFlow<ExercisesUiState> = _uiState.asStateFlow()
 
     private var isDayUpdated = false
+    private lateinit var timerCounter: Deferred<Unit>
 
     fun updateDay(dayNumber: Int) {
         if (!isDayUpdated) {
@@ -43,5 +48,39 @@ class ExercisesViewModel : ViewModel() {
             }
         }
         updateExercises(exercises)
+    }
+
+    fun startTimer() {
+        _uiState.update { currentState ->
+            currentState.copy(isTimerNow = true)
+        }
+        timerCounter = viewModelScope.async {
+            for (i in TIMER downTo 1) {
+                updateTimer(i)
+                delay(1000)
+            }
+            stopTimer()
+        }
+    }
+
+    fun updateTimer(currentTime: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(timerSeconds = currentTime)
+        }
+    }
+
+    fun stopTimer() {
+        _uiState.update { currentState ->
+            currentState.copy(isTimerNow = false)
+        }
+        timerCounter.cancel()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+    }
+
+    companion object {
+        val TIMER = 120 // amount seconds for rest between sets
     }
 }

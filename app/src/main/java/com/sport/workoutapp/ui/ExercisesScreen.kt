@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.data.model.ExerciseType
+import com.sport.workoutapp.ui.theme.BtnTimerColor
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
@@ -60,11 +65,14 @@ fun ExercisesScreen(
             .padding(24.dp)
     ) {
 
-        ExercisesHeader(exercisesUiState.dayTitle)
+        ExercisesHeader(exercisesUiState.dayTitle, onBtnTimerClick = {
+            exercisesViewModel.startTimer()
+        })
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .weight(1f),
             verticalArrangement = Arrangement.Top
         ) {
             items(exercises) { currentExercise ->
@@ -74,11 +82,55 @@ fun ExercisesScreen(
             }
         }
     }
+
+    if (exercisesUiState.isTimerNow) {
+        Column(
+            modifier = Modifier
+                .background(Color.Gray.copy(alpha = 0.5f))
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .weight(0.7f),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(50.dp)
+                        .background(Color.Black),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = exercisesUiState.timerSeconds.toString(),
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        modifier = Modifier
+                    )
+                }
+            }
+
+            Button(
+                onClick = { exercisesViewModel.stopTimer() },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
+            ) {
+                Text(text = "Stop timer")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
 }
 
-
 @Composable
-fun ExercisesHeader(dayTitle: String) {
+fun ExercisesHeader(
+    dayTitle: String,
+    onBtnTimerClick: () -> Unit
+) {
     Text(
         text = "День: ${dayTitle}", fontSize = 20.sp, modifier = Modifier
             .fillMaxWidth(),
@@ -88,12 +140,29 @@ fun ExercisesHeader(dayTitle: String) {
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    Text(
-        text = "Упражнения", fontSize = 18.sp, modifier = Modifier
-            .fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = Color.Black
-    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Упражнения:", fontSize = 18.sp, modifier = Modifier
+                .align(Alignment.CenterVertically),
+            textAlign = TextAlign.Center,
+            color = Color.Black
+        )
+
+        Button(
+            onClick = { onBtnTimerClick() },
+            modifier = Modifier
+                .background(Color.Transparent)
+                .padding(horizontal = 24.dp, vertical = 14.dp)
+                .align(Alignment.CenterVertically),
+            colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
+
+            ) {
+            Text(text = "Start timer", modifier = Modifier.padding(0.dp))
+        }
+    }
 
     Spacer(modifier = Modifier.height(12.dp))
 }

@@ -18,3 +18,5 @@ val Day3Color = Color("#F4E5B0".toColorInt())
 val WarmUpColor = Color("#EAEDFF".toColorInt())
 val ExerciseColor = Color("#FFE0D7".toColorInt())
 val WarmDownColor = Color("#DAFFD7".toColorInt())
+
+val BtnTimerColor = Color("#70BB4C".toColorInt())
