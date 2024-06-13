@@ -1,10 +1,12 @@
 package com.sport.workoutapp.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sport.workoutapp.data.getDaysData
 import com.sport.workoutapp.data.model.Exercise
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -19,6 +21,7 @@ class ExercisesViewModel : ViewModel() {
 
     private var isDayUpdated = false
     private var timerCounter: Deferred<Unit>? = null
+    private var doneExercises: Int = 0
 
     fun updateDay(dayNumber: Int) {
         if (!isDayUpdated) {
@@ -36,11 +39,19 @@ class ExercisesViewModel : ViewModel() {
 
     private fun updateExercises(exercises: List<Exercise>) {
         _uiState.update { currentState ->
-            currentState.copy(exercises = exercises)
+            currentState.copy(
+                exercises = exercises,
+                progress = getCurrentProgress()
+            )
         }
     }
 
-    fun changeExerciseIsDone(exerciseTitle: String) {
+    private fun getCurrentProgress(): Float {
+        val percentage = (doneExercises.toFloat() / uiState.value.exercises.size.toFloat())
+        return percentage
+    }
+
+    fun changeExerciseDoneStatus(exerciseTitle: String, value: Boolean) {
         val exercises = _uiState.value.exercises.map { exercise ->
             if (exercise.title == exerciseTitle) {
                 exercise.copy(isDone = !exercise.isDone)
@@ -48,6 +59,8 @@ class ExercisesViewModel : ViewModel() {
                 exercise
             }
         }
+
+        if (value) doneExercises += 1 else doneExercises -= 1
         updateExercises(exercises)
     }
 
@@ -57,7 +70,11 @@ class ExercisesViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(isTimerNow = true)
         }
-        timerCounter = viewModelScope.async(CoroutineName("TimerCounter")) {
+        timerCounter = viewModelScope.async(
+            CoroutineName("TimerCounter"),
+            CoroutineStart.DEFAULT
+        )
+        {
             for (i in TIMER downTo 1) {
                 updateTimer(i)
                 delay(1000)

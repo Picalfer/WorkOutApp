@@ -8,4 +8,5 @@ data class ExercisesUiState(
     val dayTitle: String = "",
     val isTimerNow: Boolean = false,
     val timerSeconds: Int = ExercisesViewModel.TIMER,
+    val progress: Float = 0f,
 )

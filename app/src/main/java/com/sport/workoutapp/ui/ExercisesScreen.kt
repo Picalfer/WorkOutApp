@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,6 +65,12 @@ fun ExercisesScreen(
         modifier = Modifier
             .padding(24.dp)
     ) {
+        LinearProgressIndicator(
+            progress = { exercisesUiState.progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        )
 
         ExercisesHeader(exercisesUiState.dayTitle, onBtnTimerClick = {
             exercisesViewModel.startTimer()
@@ -76,53 +83,64 @@ fun ExercisesScreen(
             verticalArrangement = Arrangement.Top
         ) {
             items(exercises) { currentExercise ->
-                ExerciseItem(currentExercise = currentExercise) {
-                    exercisesViewModel.changeExerciseIsDone(currentExercise.title)
-                }
+                ExerciseItem(currentExercise = currentExercise, onCheckboxChange = {
+                    exercisesViewModel.changeExerciseDoneStatus(currentExercise.title, it)
+                })
             }
         }
     }
 
-    if (exercisesUiState.isTimerNow) {
-        Column(
+    if (exercisesUiState.isTimerNow) TimerScreen(
+        exercisesUiState.timerSeconds,
+        onStop = {
+            exercisesViewModel.stopTimer()
+        }
+    )
+}
+
+@Composable
+fun TimerScreen(
+    timerSeconds: Int,
+    onStop: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .background(Color.Gray.copy(alpha = 0.5f))
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
             modifier = Modifier
-                .background(Color.Gray.copy(alpha = 0.5f))
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
+                .align(Alignment.CenterHorizontally)
+                .weight(0.7f),
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .weight(0.7f),
-                contentAlignment = Alignment.Center
+                    .width(50.dp)
+                    .height(50.dp)
+                    .background(Color.Black),
+                contentAlignment = Alignment.Center,
             ) {
-                Box(
+                Text(
+                    text = timerSeconds.toString(),
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
                     modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp)
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = exercisesUiState.timerSeconds.toString(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        modifier = Modifier
-                    )
-                }
+                )
             }
-
-            Button(
-                onClick = { exercisesViewModel.stopTimer() },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
-            ) {
-                Text(text = "Stop timer")
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
         }
+
+        Button(
+            onClick = { onStop() },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
+        ) {
+            Text(text = "Stop timer")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -170,7 +188,7 @@ fun ExercisesHeader(
 @Composable
 fun ExerciseItem(
     currentExercise: Exercise,
-    onCheckboxChange: () -> Unit
+    onCheckboxChange: (Boolean) -> Unit
 ) {
     var isVisible by remember { mutableStateOf(false) }
     Column(
@@ -197,7 +215,7 @@ fun ExerciseItem(
             Checkbox(
                 checked = currentExercise.isDone,
                 onCheckedChange = {
-                    onCheckboxChange()
+                    onCheckboxChange(it)
                 }
             )
         }
