@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -128,6 +129,7 @@ fun TimerScreen(
                     color = Color.White,
                     modifier = Modifier
                 )
+                CircularProgressIndicator(progress = { timerSeconds.toFloat() / ExercisesViewModel.TIMER.toFloat() })
             }
         }
 
