@@ -14,7 +14,7 @@ class DaysViewModel : ViewModel() {
         updateDays()
     }
 
-    fun updateDays() {
+    private fun updateDays() {
         _uiState.value = DaysUiState(days = getDaysData())
     }
 }
