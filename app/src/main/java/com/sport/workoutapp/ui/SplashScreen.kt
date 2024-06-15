@@ -49,7 +49,6 @@ fun SplashScreen(
                 }
             )
         )
-        delay(1000L)
         onFinished()
     }
 
