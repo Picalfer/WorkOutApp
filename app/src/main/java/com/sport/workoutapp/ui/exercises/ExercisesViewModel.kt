@@ -1,6 +1,5 @@
-package com.sport.workoutapp.ui
+package com.sport.workoutapp.ui.exercises
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sport.workoutapp.data.getDaysData
@@ -101,3 +100,12 @@ class ExercisesViewModel : ViewModel() {
         val TIMER = 120 // amount seconds for rest between sets
     }
 }
+
+data class ExercisesUiState(
+    val currentDayNumber: Int = 0,
+    val exercises: List<Exercise> = emptyList(),
+    val dayTitle: String = "",
+    val isTimerNow: Boolean = false,
+    val timerSeconds: Int = ExercisesViewModel.TIMER,
+    val progress: Float = 0f,
+)

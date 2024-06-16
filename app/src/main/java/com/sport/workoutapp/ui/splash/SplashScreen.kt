@@ -1,4 +1,4 @@
-package com.sport.workoutapp.ui
+package com.sport.workoutapp.ui.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import com.sport.workoutapp.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(

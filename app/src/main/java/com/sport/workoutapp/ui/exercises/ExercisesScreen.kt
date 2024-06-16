@@ -1,4 +1,4 @@
-package com.sport.workoutapp.ui
+package com.sport.workoutapp.ui.exercises
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image

@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.sport.workoutapp.ui.Navigation
+import com.sport.workoutapp.ui.navigation.WorkOutNavGraph
 import com.sport.workoutapp.ui.theme.WorkOutAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Navigation()
+                    WorkOutNavGraph()
                 }
             }
         }

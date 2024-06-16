@@ -1,14 +1,17 @@
-package com.sport.workoutapp.ui
+package com.sport.workoutapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sport.workoutapp.ui.days.DaysScreen
+import com.sport.workoutapp.ui.exercises.ExercisesScreen
+import com.sport.workoutapp.ui.splash.SplashScreen
 import kotlinx.serialization.Serializable
 
 @Composable
-fun Navigation() {
+fun WorkOutNavGraph() {
     val navController = rememberNavController()
 
     NavHost(
