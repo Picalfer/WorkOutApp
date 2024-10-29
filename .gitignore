@@ -104,6 +104,7 @@ obj/
 .idea/gradle.xml
 .idea/jarRepositories.xml
 .idea/navEditor.xml
+.idea/runConfigurations.xml
 
 # Legacy Eclipse project files
 .classpath
@@ -137,4 +138,3 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
