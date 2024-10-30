@@ -49,17 +49,17 @@ import com.sport.workoutapp.ui.theme.BtnTimerColor
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun ExercisesScreen(
     exercisesViewModel: ExercisesViewModel = viewModel(),
-    dayNumber: Int
+    dayId: ObjectId
 ) {
     val exercisesUiState by exercisesViewModel.uiState.collectAsState()
-    val exercises = exercisesUiState.exercises
 
-    LaunchedEffect(dayNumber) {
-        exercisesViewModel.updateDay(dayNumber)
+    LaunchedEffect(dayId) {
+        exercisesViewModel.updateDay(dayId)
     }
 
     Column(
@@ -83,9 +83,9 @@ fun ExercisesScreen(
                 .weight(1f),
             verticalArrangement = Arrangement.Top
         ) {
-            items(exercises) { currentExercise ->
+            items(exercisesUiState.exercises) { currentExercise ->
                 ExerciseItem(currentExercise = currentExercise, onCheckboxChange = {
-                    exercisesViewModel.changeExerciseDoneStatus(currentExercise.title, it)
+                    exercisesViewModel.changeExerciseDoneStatus(currentExercise._id, it)
                 })
             }
         }
@@ -152,7 +152,7 @@ fun ExercisesHeader(
     onBtnTimerClick: () -> Unit
 ) {
     Text(
-        text = "День: ${dayTitle}", fontSize = 20.sp, modifier = Modifier
+        text = "День: $dayTitle", fontSize = 20.sp, modifier = Modifier
             .fillMaxWidth(),
         textAlign = TextAlign.Center,
         color = Color.Black
@@ -196,10 +196,10 @@ fun ExerciseItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(if (currentExercise.type == ExerciseType.WarmUp) WarmUpColor else if (currentExercise.type == ExerciseType.WarmDown) WarmDownColor else ExerciseColor)
+            .background(if (currentExercise.type == ExerciseType.WarmUp.name) WarmUpColor else if (currentExercise.type == ExerciseType.WarmDown.name) WarmDownColor else ExerciseColor)
             .padding(all = 6.dp)
             .clickable {
-                if (currentExercise.type == ExerciseType.Standard) isVisible =
+                if (currentExercise.type == ExerciseType.Standard.name) isVisible =
                     !isVisible
             }
     ) {
@@ -221,7 +221,7 @@ fun ExerciseItem(
                 }
             )
         }
-        if (isVisible && currentExercise.type == ExerciseType.Standard) {
+        if (isVisible && currentExercise.type == ExerciseType.Standard.name) {
             val context = LocalContext.current
             val imageLoader = ImageLoader.Builder(context)
                 .components {

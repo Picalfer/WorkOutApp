@@ -9,6 +9,7 @@ import com.sport.workoutapp.ui.days.DaysScreen
 import com.sport.workoutapp.ui.exercises.ExercisesScreen
 import com.sport.workoutapp.ui.splash.SplashScreen
 import kotlinx.serialization.Serializable
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun WorkOutNavGraph() {
@@ -25,13 +26,14 @@ fun WorkOutNavGraph() {
         }
         composable<DaysRoute> {
             DaysScreen(onDayClick = {
-                navController.navigate(ExercisesRoute(dayNumber = it))
+                navController.navigate(ExercisesRoute(dayId = it.toHexString()))
             })
         }
         composable<ExercisesRoute> {
             val args = it.toRoute<ExercisesRoute>()
+            val dayId = ObjectId(args.dayId)
             ExercisesScreen(
-                dayNumber = args.dayNumber
+                dayId = dayId
             )
         }
     }
@@ -45,5 +47,5 @@ object SplashRoute
 
 @Serializable
 data class ExercisesRoute(
-    val dayNumber: Int
+    val dayId: String
 )

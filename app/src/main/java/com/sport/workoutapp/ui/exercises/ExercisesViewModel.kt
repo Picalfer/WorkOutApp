@@ -2,8 +2,10 @@ package com.sport.workoutapp.ui.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sport.workoutapp.data.getDaysData
+import com.sport.workoutapp.WorkOutApplication.Companion.realm
+import com.sport.workoutapp.data.model.Day
 import com.sport.workoutapp.data.model.Exercise
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
@@ -13,6 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 
 class ExercisesViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ExercisesUiState())
@@ -22,17 +26,23 @@ class ExercisesViewModel : ViewModel() {
     private var timerCounter: Deferred<Unit>? = null
     private var doneExercises: Int = 0
 
-    fun updateDay(dayNumber: Int) {
+    fun updateDay(dayId: ObjectId) {
         if (!isDayUpdated) {
-            val exercises = getDaysData()[dayNumber].exercises
-            val dayTitle = getDaysData()[dayNumber].title
+            viewModelScope.launch {
+                val day = realm.query<Day>("_id == $0", dayId).first().find()
+                if (day != null) {
+                    val exercises = day.exercises
+                    val dayTitle = day.title
 
-            _uiState.value = ExercisesUiState(
-                currentDayNumber = dayNumber,
-                exercises = exercises,
-                dayTitle = dayTitle
-            )
-            isDayUpdated = true
+                    _uiState.value = ExercisesUiState(
+                        currentDayId = dayId,
+                        exercises = exercises,
+                        dayTitle = dayTitle
+                    )
+                    isDayUpdated = true
+                }
+            }
+
         }
     }
 
@@ -50,9 +60,9 @@ class ExercisesViewModel : ViewModel() {
         return percentage
     }
 
-    fun changeExerciseDoneStatus(exerciseTitle: String, value: Boolean) {
+    fun changeExerciseDoneStatus(exerciseId: ObjectId, value: Boolean) {
         val exercises = _uiState.value.exercises.map { exercise ->
-            if (exercise.title == exerciseTitle) {
+            if (exercise._id == exerciseId) {
                 exercise.copy(isDone = !exercise.isDone)
             } else {
                 exercise
@@ -102,7 +112,7 @@ class ExercisesViewModel : ViewModel() {
 }
 
 data class ExercisesUiState(
-    val currentDayNumber: Int = 0,
+    val currentDayId: ObjectId? = null,
     val exercises: List<Exercise> = emptyList(),
     val dayTitle: String = "",
     val isTimerNow: Boolean = false,
