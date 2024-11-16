@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sport.workoutapp.ui.days.DaysScreen
 import com.sport.workoutapp.ui.exercises.ExercisesScreen
+import com.sport.workoutapp.ui.newday.NewDayExercisesScreen
 import com.sport.workoutapp.ui.splash.SplashScreen
 import kotlinx.serialization.Serializable
 import org.mongodb.kbson.ObjectId
@@ -25,9 +26,14 @@ fun WorkOutNavGraph() {
             })
         }
         composable<DaysRoute> {
-            DaysScreen(onDayClick = {
-                navController.navigate(ExercisesRoute(dayId = it.toHexString()))
-            })
+            DaysScreen(
+                onDayClick = {
+                    navController.navigate(ExercisesRoute(dayId = it.toHexString()))
+                },
+                onBtnAddDayClick = {
+                    navController.navigate(NewDayExercisesRoute)
+                }
+            )
         }
         composable<ExercisesRoute> {
             val args = it.toRoute<ExercisesRoute>()
@@ -35,6 +41,9 @@ fun WorkOutNavGraph() {
             ExercisesScreen(
                 dayId = dayId
             )
+        }
+        composable<NewDayExercisesRoute> {
+            NewDayExercisesScreen()
         }
     }
 }
@@ -44,6 +53,9 @@ object DaysRoute
 
 @Serializable
 object SplashRoute
+
+@Serializable
+object NewDayExercisesRoute
 
 @Serializable
 data class ExercisesRoute(
