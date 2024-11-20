@@ -94,7 +94,7 @@ fun ExercisesScreen(
     if (exercisesUiState.isTimerNow) TimerScreen(
         exercisesUiState.timerSeconds,
         onStop = {
-            exercisesViewModel.stopTimer()
+            exercisesViewModel.stopTimer(true)
         }
     )
 }

@@ -1,6 +1,7 @@
 package com.sport.workoutapp
 
 import android.app.Application
+import com.sport.workoutapp.data.AudioPlayer
 import com.sport.workoutapp.data.Repository
 import com.sport.workoutapp.data.model.Day
 import com.sport.workoutapp.data.model.Exercise
@@ -19,6 +20,8 @@ class WorkOutApplication : Application() {
 
         initRealm()
         checkFirstLaunchAndCreateSampleDays()
+
+        player = AudioPlayer(this)
     }
 
     private fun initRealm() {
@@ -49,5 +52,6 @@ class WorkOutApplication : Application() {
 
     companion object {
         lateinit var realm: Realm
+        lateinit var player: AudioPlayer
     }
 }

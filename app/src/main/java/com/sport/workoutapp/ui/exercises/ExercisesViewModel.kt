@@ -2,6 +2,7 @@ package com.sport.workoutapp.ui.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sport.workoutapp.WorkOutApplication.Companion.player
 import com.sport.workoutapp.WorkOutApplication.Companion.realm
 import com.sport.workoutapp.data.model.Day
 import com.sport.workoutapp.data.model.Exercise
@@ -88,7 +89,7 @@ class ExercisesViewModel : ViewModel() {
                 updateTimer(i)
                 delay(1000)
             }
-            stopTimer()
+            stopTimer(true)
         }
     }
 
@@ -98,11 +99,14 @@ class ExercisesViewModel : ViewModel() {
         }
     }
 
-    fun stopTimer() {
+    fun stopTimer(withGong: Boolean = false) {
         timerCounter?.cancel()
 
         _uiState.update { currentState ->
             currentState.copy(isTimerNow = false)
+        }
+        if (withGong) {
+            player.playGong()
         }
     }
 
