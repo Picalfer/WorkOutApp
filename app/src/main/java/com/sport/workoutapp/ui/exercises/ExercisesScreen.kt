@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
@@ -45,7 +43,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.data.model.ExerciseType
-import com.sport.workoutapp.ui.theme.BtnTimerColor
+import com.sport.workoutapp.ui.newday.GreenButton
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
@@ -58,6 +56,7 @@ fun ExercisesScreen(
 ) {
     val exercisesUiState by exercisesViewModel.uiState.collectAsState()
 
+    // refactor to init of viewModel
     LaunchedEffect(dayId) {
         exercisesViewModel.updateDay(dayId)
     }
@@ -133,13 +132,8 @@ fun TimerScreen(
             }
         }
 
-        Button(
-            onClick = { onStop() },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
-        ) {
-            Text(text = "Stop timer")
+        Box(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
+            GreenButton(onClick = { onStop() }, "Stop timer")
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -171,17 +165,8 @@ fun ExercisesHeader(
             color = Color.Black
         )
 
-        Button(
-            onClick = { onBtnTimerClick() },
-            modifier = Modifier
-                .background(Color.Transparent)
-                .padding(horizontal = 24.dp, vertical = 14.dp)
-                .align(Alignment.CenterVertically),
-            colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
+        GreenButton(onClick = { onBtnTimerClick() }, "Start timer")
 
-            ) {
-            Text(text = "Start timer", modifier = Modifier.padding(0.dp))
-        }
     }
 
     Spacer(modifier = Modifier.height(12.dp))

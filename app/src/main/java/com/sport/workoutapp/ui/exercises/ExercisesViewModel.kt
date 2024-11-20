@@ -27,6 +27,7 @@ class ExercisesViewModel : ViewModel() {
     private var timerCounter: Deferred<Unit>? = null
     private var doneExercises: Int = 0
 
+    // refactor to init
     fun updateDay(dayId: ObjectId) {
         if (!isDayUpdated) {
             viewModelScope.launch {

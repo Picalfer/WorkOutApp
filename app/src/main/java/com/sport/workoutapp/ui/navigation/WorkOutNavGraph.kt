@@ -43,7 +43,14 @@ fun WorkOutNavGraph() {
             )
         }
         composable<NewDayExercisesRoute> {
-            NewDayExercisesScreen()
+            NewDayExercisesScreen(
+                onBackClick = {
+                    navController.navigate(DaysRoute)
+                },
+                onNextClick = {
+
+                }
+            )
         }
     }
 }
