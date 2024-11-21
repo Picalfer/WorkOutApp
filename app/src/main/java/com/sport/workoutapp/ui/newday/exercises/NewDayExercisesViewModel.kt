@@ -1,4 +1,4 @@
-package com.sport.workoutapp.ui.newday
+package com.sport.workoutapp.ui.newday.exercises
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

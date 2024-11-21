@@ -43,7 +43,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.data.model.ExerciseType
-import com.sport.workoutapp.ui.newday.GreenButton
+import com.sport.workoutapp.ui.newday.exercises.GreenButton
 import com.sport.workoutapp.ui.theme.ExerciseColor
 import com.sport.workoutapp.ui.theme.WarmDownColor
 import com.sport.workoutapp.ui.theme.WarmUpColor
@@ -52,7 +52,7 @@ import org.mongodb.kbson.ObjectId
 @Composable
 fun ExercisesScreen(
     exercisesViewModel: ExercisesViewModel = viewModel(),
-    dayId: ObjectId
+    dayId: ObjectId,
 ) {
     val exercisesUiState by exercisesViewModel.uiState.collectAsState()
 
@@ -143,7 +143,7 @@ fun TimerScreen(
 @Composable
 fun ExercisesHeader(
     dayTitle: String,
-    onBtnTimerClick: () -> Unit
+    onBtnTimerClick: () -> Unit,
 ) {
     Text(
         text = "День: $dayTitle", fontSize = 20.sp, modifier = Modifier
@@ -175,7 +175,7 @@ fun ExercisesHeader(
 @Composable
 fun ExerciseItem(
     currentExercise: Exercise,
-    onCheckboxChange: (Boolean) -> Unit
+    onCheckboxChange: (Boolean) -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(false) }
     Column(

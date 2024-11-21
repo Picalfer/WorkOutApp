@@ -1,4 +1,4 @@
-package com.sport.workoutapp.ui.newday
+package com.sport.workoutapp.ui.newday.exercises
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -68,7 +68,6 @@ fun NewDayExercisesScreen(
         }
 
         Spacer(modifier = Modifier.height(9.dp))
-
     }
 }
 
