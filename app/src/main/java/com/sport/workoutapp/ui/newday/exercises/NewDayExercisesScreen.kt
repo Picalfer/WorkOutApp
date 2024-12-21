@@ -23,14 +23,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.ui.exercises.ExerciseItem
 import com.sport.workoutapp.ui.theme.BtnTimerColor
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun NewDayExercisesScreen(
     newDayExercisesViewModel: NewDayExercisesViewModel = viewModel(),
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (List<ObjectId>) -> Unit,
 ) {
     val newDayExercisesUiState by newDayExercisesViewModel.uiState.collectAsState()
 
@@ -64,7 +66,7 @@ fun NewDayExercisesScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             GreenButton(onClick = { onBackClick() }, "Выйти")
-            GreenButton(onClick = { onNextClick() }, "Далее")
+            GreenButton(onClick = { onNextClick(newDayExercisesViewModel.selectedExercises) }, "Далее")
         }
 
         Spacer(modifier = Modifier.height(9.dp))
@@ -74,16 +76,15 @@ fun NewDayExercisesScreen(
 @Composable
 fun GreenButton(
     onClick: () -> Unit,
-    text: String
+    text: String,
 ) {
     Button(
         onClick = { onClick() },
         modifier = Modifier
             .background(Color.Transparent)
-            .padding(horizontal = 24.dp, vertical = 14.dp),
+            .padding(horizontal = 12.dp, vertical = 14.dp),
         colors = ButtonColors(BtnTimerColor, Color.White, Color.Black, Color.White),
-
-        ) {
+    ) {
         Text(text = text, modifier = Modifier.padding(0.dp))
     }
 }

@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.ui.days.DaysScreen
 import com.sport.workoutapp.ui.exercises.ExercisesScreen
 import com.sport.workoutapp.ui.newday.exercises.NewDayExercisesScreen
@@ -50,15 +51,24 @@ fun WorkOutNavGraph() {
                     navController.navigate(DaysRoute)
                 },
                 onNextClick = {
-                    navController.navigate(NewDayAddonsRoute)
+                    navController.navigate(NewDayAddonsRoute(exercises = it))
                 }
             )
         }
         composable<NewDayAddonsRoute> {
+            val args = it.toRoute<NewDayAddonsRoute>()
+            val exercises = args.exercises
             NewDayAddonsScreen(
                 onBackClick = {
                     navController.navigate(NewDayExercisesRoute)
-                }
+                },
+                onExitClick = {
+                    navController.navigate(DaysRoute)
+                },
+                onNextClick = {
+
+                },
+                exercises = exercises
             )
         }
     }
@@ -79,4 +89,6 @@ data class ExercisesRoute(
 object NewDayExercisesRoute
 
 @Serializable
-object NewDayAddonsRoute
+data class NewDayAddonsRoute(
+    val exercises: List<ObjectId>,
+)

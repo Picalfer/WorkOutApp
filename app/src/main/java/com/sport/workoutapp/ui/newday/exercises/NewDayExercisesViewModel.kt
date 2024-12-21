@@ -16,7 +16,7 @@ class NewDayExercisesViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(NewDayExercisesUiState())
     val uiState: StateFlow<NewDayExercisesUiState> = _uiState.asStateFlow()
 
-    private var selectedExercises: Int = 0
+    var selectedExercises: MutableList<ObjectId> = mutableListOf()
 
     init {
         viewModelScope.launch {
@@ -44,7 +44,19 @@ class NewDayExercisesViewModel : ViewModel() {
             }
         }
 
-        if (value) selectedExercises += 1 else selectedExercises -= 1
+        var exercise = Exercise()
+        exercises.forEach {
+            if (it._id == exerciseId) {
+                exercise = it
+            }
+        }
+
+        if (value) {
+            selectedExercises.add(exercise._id)
+        }
+        else {
+            selectedExercises.remove(exercise._id)
+        }
         updateExercises(exercises)
     }
 }

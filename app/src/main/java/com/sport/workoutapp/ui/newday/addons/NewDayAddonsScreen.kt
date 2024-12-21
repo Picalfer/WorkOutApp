@@ -21,22 +21,25 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sport.workoutapp.ui.exercises.ExerciseItem
 import com.sport.workoutapp.ui.newday.exercises.GreenButton
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun NewDayAddonsScreen(
     newDayAddonsViewModel: NewDayAddonsViewModel = viewModel(),
     onBackClick: () -> Unit,
+    onExitClick: () -> Unit,
+    onNextClick: () -> Unit,
+    exercises: List<ObjectId>,
 ) {
     val newDayAddonsUiState by newDayAddonsViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         Spacer(Modifier.height(10.dp))
         Text(
-            text = "Выберите упражнения",
+            text = "Настройте день",
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 17.sp,
         )
@@ -45,6 +48,7 @@ fun NewDayAddonsScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
+                .padding(16.dp)
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -68,8 +72,9 @@ fun NewDayAddonsScreen(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            GreenButton(onClick = { onBackClick() }, "Выйти")
-            GreenButton(onClick = { }, "Далее")
+            GreenButton(onClick = { onBackClick() }, "Назад")
+            GreenButton(onClick = { onExitClick() }, "Выйти")
+            GreenButton(onClick = { onNextClick() }, "Далее")
         }
 
         Spacer(modifier = Modifier.height(9.dp))
