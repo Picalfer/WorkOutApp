@@ -23,16 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.ui.exercises.ExerciseItem
 import com.sport.workoutapp.ui.theme.BtnTimerColor
-import org.mongodb.kbson.ObjectId
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.encodeToJsonElement
 
 @Composable
 fun NewDayExercisesScreen(
     newDayExercisesViewModel: NewDayExercisesViewModel = viewModel(),
     onBackClick: () -> Unit,
-    onNextClick: (List<ObjectId>) -> Unit,
+    onNextClick: (String) -> Unit,
 ) {
     val newDayExercisesUiState by newDayExercisesViewModel.uiState.collectAsState()
 
@@ -66,7 +67,20 @@ fun NewDayExercisesScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             GreenButton(onClick = { onBackClick() }, "Выйти")
-            GreenButton(onClick = { onNextClick(newDayExercisesViewModel.selectedExercises) }, "Далее")
+            GreenButton(
+                onClick = {
+                    // Сериализация
+                    val exercisesJson = buildJsonObject {
+                        put(
+                            "exercises",
+                            Json.encodeToJsonElement(newDayExercisesViewModel.selectedExercises)
+                        )
+                    }
+
+                    onNextClick(exercisesJson.toString())
+                },
+                "Далее"
+            )
         }
 
         Spacer(modifier = Modifier.height(9.dp))

@@ -5,14 +5,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.ui.days.DaysScreen
 import com.sport.workoutapp.ui.exercises.ExercisesScreen
-import com.sport.workoutapp.ui.newday.exercises.NewDayExercisesScreen
 import com.sport.workoutapp.ui.newday.addons.NewDayAddonsScreen
 import com.sport.workoutapp.ui.newday.exercises.NewDayExercisesScreen
 import com.sport.workoutapp.ui.splash.SplashScreen
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 import org.mongodb.kbson.ObjectId
 
 @Composable
@@ -57,7 +58,10 @@ fun WorkOutNavGraph() {
         }
         composable<NewDayAddonsRoute> {
             val args = it.toRoute<NewDayAddonsRoute>()
-            val exercises = args.exercises
+            val exercisesJson = Json.parseToJsonElement(args.exercises).jsonObject
+            val exercises: List<ObjectId> =
+                Json.decodeFromJsonElement<List<ObjectId>>(exercisesJson["exercises"]!!)
+
             NewDayAddonsScreen(
                 onBackClick = {
                     navController.navigate(NewDayExercisesRoute)
@@ -90,5 +94,5 @@ object NewDayExercisesRoute
 
 @Serializable
 data class NewDayAddonsRoute(
-    val exercises: List<ObjectId>,
+    val exercises: String,
 )
