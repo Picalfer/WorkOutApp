@@ -1,6 +1,7 @@
 package com.sport.workoutapp.ui.exercises
 
 import android.os.Build.VERSION.SDK_INT
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -41,6 +47,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.sport.workoutapp.data.TrainingsLab
 import com.sport.workoutapp.data.model.Exercise
 import com.sport.workoutapp.data.model.ExerciseType
 import com.sport.workoutapp.ui.newday.exercises.GreenButton
@@ -55,7 +62,7 @@ fun ExercisesScreen(
     dayId: ObjectId,
 ) {
     val exercisesUiState by exercisesViewModel.uiState.collectAsState()
-
+    val context = LocalContext.current
     // refactor to init of viewModel
     LaunchedEffect(dayId) {
         exercisesViewModel.updateDay(dayId)
@@ -65,12 +72,23 @@ fun ExercisesScreen(
         modifier = Modifier
             .padding(24.dp)
     ) {
-        LinearProgressIndicator(
-            progress = { exercisesUiState.progress },
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp)
-        )
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LinearProgressIndicator(
+                progress = { exercisesUiState.progress },
+                modifier = Modifier
+            )
+            Text(
+                text = (exercisesUiState.progress * 100).toInt().toString() + "%",
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+            )
+        }
 
         ExercisesHeader(exercisesUiState.dayTitle, onBtnTimerClick = {
             exercisesViewModel.startTimer()
@@ -96,7 +114,71 @@ fun ExercisesScreen(
             exercisesViewModel.stopTimer(true)
         }
     )
+
+    if (exercisesUiState.showModal) {
+        MyModalDialog(
+            title = "Дело сделано!",
+            text = "Супер! Ты закончил тренировку!\nОтметить её в календаре?",
+            onDismiss = { exercisesViewModel.hideModal() },
+            onConfirm = {
+                val trainingsLab = TrainingsLab.getInstance(context)
+                exercisesViewModel.admitTraining(trainingsLab)
+            },
+            onCancel = { /* Логика для отмены */ }
+        )
+    }
 }
+
+@Composable
+fun MyModalDialog(
+    title: String,
+    text: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+    ) {
+        AlertDialog(
+            modifier = Modifier.align(Alignment.Center),
+            tonalElevation = 14.dp,
+            containerColor = Color.White.copy(alpha = 0.9f),
+            onDismissRequest = onDismiss,
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onConfirm()
+                        onDismiss()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color("#FF7B7D".toColorInt())),
+                    border = BorderStroke(1.dp, Color.Black),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text("Да", color = Color.White, fontSize = 14.sp)
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        onCancel()
+                        onDismiss()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color("#7B8DFF".toColorInt())),
+                    border = BorderStroke(1.dp, Color.Black),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text("Нет", color = Color.White, fontSize = 14.sp)
+                }
+            }
+        )
+    }
+}
+
 
 @Composable
 fun TimerScreen(

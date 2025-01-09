@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sport.workoutapp.WorkOutApplication.Companion.player
 import com.sport.workoutapp.WorkOutApplication.Companion.realm
+import com.sport.workoutapp.data.TrainingsLab
 import com.sport.workoutapp.data.model.Day
 import com.sport.workoutapp.data.model.Exercise
+import com.sport.workoutapp.data.model.Training
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineStart
@@ -48,6 +50,12 @@ class ExercisesViewModel : ViewModel() {
         }
     }
 
+    fun admitTraining(trainingsLab: TrainingsLab) {
+        val training = Training(title = _uiState.value.dayTitle)
+        trainingsLab.addTraining(training)
+        trainingsLab.saveTrainings()
+    }
+
     private fun updateExercises(exercises: List<Exercise>) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -55,6 +63,17 @@ class ExercisesViewModel : ViewModel() {
                 progress = getCurrentProgress()
             )
         }
+        if (getCurrentProgress() == 1.0f) {
+            showModal()
+        }
+    }
+
+    private fun showModal() {
+        _uiState.value = _uiState.value.copy(showModal = true)
+    }
+
+    fun hideModal() {
+        _uiState.value = _uiState.value.copy(showModal = false)
     }
 
     private fun getCurrentProgress(): Float {
@@ -123,4 +142,5 @@ data class ExercisesUiState(
     val isTimerNow: Boolean = false,
     val timerSeconds: Int = ExercisesViewModel.TIMER,
     val progress: Float = 0f,
+    val showModal: Boolean = false,
 )
