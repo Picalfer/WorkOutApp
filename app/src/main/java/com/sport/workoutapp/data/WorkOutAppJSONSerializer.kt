@@ -14,8 +14,8 @@ import java.io.Writer
 class WorkOutAppJSONSerializer(private val context: Context, private val filename: String) {
     fun saveTrainings(trainings: List<Training>) {
         val array = JSONArray()
-        for (crime in trainings) {
-            array.put(crime.toJSON())
+        for (training in trainings) {
+            array.put(training.toJSON())
         }
         Log.d("WorkOutAppJSON", array.toString())
         var writer: Writer? =
@@ -54,7 +54,7 @@ class WorkOutAppJSONSerializer(private val context: Context, private val filenam
             // Разбор JSON с использованием JSONTokener
             val array = JSONTokener(jsonString.toString()).nextValue() as JSONArray
 
-            // Построение массива объектов Crime по данным JSONObject
+            // Построение массива объектов training по данным JSONObject
             for (i in 0 until array.length()) {
                 trainings.add(Training(array.getJSONObject(i)))
             }
