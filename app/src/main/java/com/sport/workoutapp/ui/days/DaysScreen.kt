@@ -36,7 +36,7 @@ import org.mongodb.kbson.ObjectId
 fun DaysScreen(
     daysViewModel: DaysViewModel = viewModel(),
     onDayClick: (ObjectId) -> Unit,
-    onBtnAddDayClick: () -> Unit
+    onBtnAddDayClick: () -> Unit,
 ) {
     val daysUiState by daysViewModel.uiState.collectAsState()
 
@@ -115,7 +115,7 @@ fun DayItem(day: Day, onClick: (ObjectId) -> Unit) {
 fun ImageButton(
     modifier: Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     TextButton(
         onClick = onClick,

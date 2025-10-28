@@ -76,4 +76,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.realm.kotlin)
+
+    implementation(libs.androidx.material)
 }
