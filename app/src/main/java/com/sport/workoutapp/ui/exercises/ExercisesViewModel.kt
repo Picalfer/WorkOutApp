@@ -53,7 +53,6 @@ class ExercisesViewModel : ViewModel() {
     fun admitTraining(trainingsLab: TrainingsLab) {
         val training = Training(title = _uiState.value.dayTitle)
         trainingsLab.addTraining(training)
-        trainingsLab.saveTrainings()
     }
 
     private fun updateExercises(exercises: List<Exercise>) {

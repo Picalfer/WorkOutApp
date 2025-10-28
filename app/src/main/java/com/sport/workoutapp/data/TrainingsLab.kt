@@ -23,10 +23,12 @@ class TrainingsLab(context: Context) {
 
     fun addTraining(training: Training) {
         trainings.add(training)
+        saveTrainings()
     }
 
     fun deleteTraining(training: Training) {
         trainings.remove(training)
+        saveTrainings()
     }
 
     fun getTraining(id: UUID): Training? {
