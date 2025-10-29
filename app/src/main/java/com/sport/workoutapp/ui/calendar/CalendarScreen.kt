@@ -1,5 +1,8 @@
 package com.sport.workoutapp.ui.calendar
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,34 +19,26 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sport.workoutapp.data.TrainingsLab
-import com.sport.workoutapp.data.model.Day
 import com.sport.workoutapp.data.model.Training
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
-import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Calendar
@@ -51,22 +46,62 @@ import java.util.Locale
 
 @Composable
 fun CalendarScreen(
-    calendarViewModel: DaysViewModel = viewModel(),
+    calendarViewModel: CalendarViewModel = viewModel(),
 ) {
     val calendarUiState by calendarViewModel.uiState.collectAsState()
-
     val context = LocalContext.current
+    val trainingsLab = remember { TrainingsLab.getInstance(context) }
+
+    // Обработка сообщений
+    calendarUiState.message?.let { message ->
+        LaunchedEffect(message) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            calendarViewModel.clearMessage()
+        }
+    }
+
+    // Контракт для выбора файла
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            calendarViewModel.onImportClicked(uri, trainingsLab, context)
+        }
+    }
+
     LaunchedEffect(calendarUiState) {
-        val newTrainings = TrainingsLab.getInstance(context).getTrainings()
+        val newTrainings = trainingsLab.getTrainings()
         calendarViewModel.setTrainings(newTrainings)
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column {
+            // Кнопки импорта/экспорта
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = {
+                    calendarViewModel.onExportClicked(trainingsLab, context)
+                }, enabled = !calendarUiState.isLoading) {
+                    Text("Экспорт статистики")
+                }
 
-            //MyCalendarScreen()
+                Button(
+                    onClick = {
+                        filePickerLauncher.launch("application/json")
+                    },
+                    enabled = !calendarUiState.isLoading
+                ) {
+                    Text("Импорт статистики")
+                }
+            }
+
+            if (calendarUiState.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
 
             LazyColumn(
                 modifier = Modifier
@@ -74,7 +109,6 @@ fun CalendarScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 items(calendarUiState.trainings.toList()) { training ->
                     Row(
                         modifier = Modifier
@@ -92,13 +126,10 @@ fun CalendarScreen(
                             Text("Удалить")
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-
         }
-
     }
 }
 
@@ -201,7 +232,8 @@ fun DayCell(day: Int, isCompleted: Boolean) {
 
 fun getStringDateOfTraining(training: Training): String {
     val year = training.date.get(Calendar.YEAR).toString()
-    val month = training.date.get(Calendar.MONTH).toString()
+    val month =
+        (training.date.get(Calendar.MONTH) + 1).toString() // т.к. в классе Calendar месяцы начинаются с 0
     val day = training.date.get(Calendar.DAY_OF_MONTH).toString()
 
     return "$year/$month/$day"
